@@ -108,7 +108,7 @@ PLATFORM = flapper
 endif
 
 
-PLATFORM  ?= cf2
+PLATFORM  ?= flapper
 PROG ?= $(PLATFORM)
 
 ifeq ($(CONFIG_DEBUG),y)
