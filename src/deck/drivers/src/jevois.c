@@ -45,12 +45,9 @@ void jevoisTask(void *param)
 {
     systemWaitStart();
 
-    // uart2SendData(7, "start\n");
-
     while (true)
     {
         ts = jevoisTimestamp();
-        DEBUG_PRINT("UART READ: %ld\n", ts);
     }
 }
 
