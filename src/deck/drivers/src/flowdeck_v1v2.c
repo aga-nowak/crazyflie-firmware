@@ -66,6 +66,8 @@ static bool isInit2 = false;
 
 motionBurst_t currentMotion;
 
+flowMeasurement_t flowData;
+
 // Disables pushing the flow measurement in the EKF
 static bool useFlowDisabled = false;
 
@@ -115,7 +117,6 @@ static void flowdeckTask(void *param)
 
 
     // Form flow measurement struct and push into the EKF
-    flowMeasurement_t flowData;
     flowData.stdDevX = stdFlow;
     flowData.stdDevY = stdFlow;
     flowData.dt = (float)(usecTimestamp()-lastTime)/1000000.0f;
@@ -300,6 +301,10 @@ LOG_ADD(LOG_UINT8, squal, &currentMotion.squal)
  * @brief Standard deviation of flow measurement
  */
 LOG_ADD(LOG_FLOAT, std, &stdFlow)
+/**
+ * @brief Time between frames
+ */
+LOG_ADD(LOG_FLOAT, dt, &flowData.dt)
 LOG_GROUP_STOP(motion)
 
 /**
