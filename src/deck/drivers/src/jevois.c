@@ -12,12 +12,15 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "system.h"
+#include "eventtrigger.h"
 
-#define MAX_MESSAGE_SIZE 32
+#define MAX_MESSAGE_SIZE 10 // max no of chars in the message
+
+EVENTTRIGGER(jevoisTimestampLog)
 
 static bool isInit = false;
 
-uint32_t ts = 0;
+uint32_t loggedTimestamp = 0;
 
 uint32_t jevoisTimestamp()
 {
@@ -28,17 +31,16 @@ uint32_t jevoisTimestamp()
     {
         uart2Getchar(&c);
 
-        if (c == '\n')
-        {
-            break;
-        }
+        if (c == '\n') break;
         
         buf[i] = c;
     }
 
-    uint32_t timestamp = atoi(buf);
+    loggedTimestamp = atoi(buf);
 
-    return timestamp;
+    eventTrigger(&eventTrigger_jevoisTimestampLog);
+
+    return loggedTimestamp;
 }
 
 void jevoisTask(void *param)
@@ -47,7 +49,7 @@ void jevoisTask(void *param)
 
     while (true)
     {
-        ts = jevoisTimestamp();
+        jevoisTimestamp();
     }
 }
 
@@ -80,5 +82,5 @@ DECK_DRIVER(jevoisDriver);
  * Logging variables for the jevois camera
  */
 LOG_GROUP_START(jevois)
-LOG_ADD(LOG_UINT32, timestamp, &ts)
+LOG_ADD(LOG_UINT32, timestamp, &loggedTimestamp)
 LOG_GROUP_STOP(jevois)
