@@ -14,18 +14,32 @@
 #include "system.h"
 #include "eventtrigger.h"
 
-#define MAX_MESSAGE_SIZE 10 // max no of chars in the message
+#define MAX_MESSAGE_SIZE 16 // max no of chars in the message
 
-EVENTTRIGGER(jevoisTimestampLog)
+// EVENTTRIGGER(jevoisErrorLog, float, errorx, float, errory)
 
 static bool isInit = false;
 
-uint32_t loggedTimestamp = 0;
+float loggedErrorX = 0;
+float loggedErrorY = 0;
 
-uint32_t jevoisTimestamp()
+void jevoisError()
 {
-    char buf[MAX_MESSAGE_SIZE];
+    char errorX[MAX_MESSAGE_SIZE];
+    char errorY[MAX_MESSAGE_SIZE];
+
     char c = '0';
+
+    for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
+    {
+        uart2Getchar(&c);
+
+        if (c == '-') break;
+        
+        errorX[i] = c;
+    }
+
+    loggedErrorX = atof(errorX);
 
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
     {
@@ -33,14 +47,12 @@ uint32_t jevoisTimestamp()
 
         if (c == '\n') break;
         
-        buf[i] = c;
+        errorY[i] = c;
     }
 
-    loggedTimestamp = atoi(buf);
+    loggedErrorY = atof(errorY);
 
-    eventTrigger(&eventTrigger_jevoisTimestampLog);
-
-    return loggedTimestamp;
+    // eventTrigger(&eventTrigger_jevoisErrorLog);
 }
 
 void jevoisTask(void *param)
@@ -49,7 +61,7 @@ void jevoisTask(void *param)
 
     while (true)
     {
-        jevoisTimestamp();
+        jevoisError();
     }
 }
 
@@ -82,5 +94,6 @@ DECK_DRIVER(jevoisDriver);
  * Logging variables for the jevois camera
  */
 LOG_GROUP_START(jevois)
-LOG_ADD(LOG_UINT32, timestamp, &loggedTimestamp)
+LOG_ADD(LOG_FLOAT, errorx, &loggedErrorX)
+LOG_ADD(LOG_FLOAT, errory, &loggedErrorY)
 LOG_GROUP_STOP(jevois)
