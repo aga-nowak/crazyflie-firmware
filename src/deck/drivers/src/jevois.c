@@ -14,21 +14,18 @@
 #include "system.h"
 #include "eventtrigger.h"
 
-#define MAX_MESSAGE_SIZE 16 // max no of chars in the message
-
-// EVENTTRIGGER(jevoisErrorLog, float, errorx, float, errory)
+#define MAX_MESSAGE_SIZE 32 // max no of chars in the message
 
 static bool isInit = false;
 
-float loggedErrorX = 0;
-float loggedErrorY = 0;
+int32_t loggedErrorX = 0;
+int32_t loggedErrorY = 0;
 
-void jevoisError()
+void snakeGate()
 {
+    char c = '0';
     char errorX[MAX_MESSAGE_SIZE];
     char errorY[MAX_MESSAGE_SIZE];
-
-    char c = '0';
 
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
     {
@@ -39,8 +36,6 @@ void jevoisError()
         errorX[i] = c;
     }
 
-    loggedErrorX = atof(errorX);
-
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
     {
         uart2Getchar(&c);
@@ -50,9 +45,8 @@ void jevoisError()
         errorY[i] = c;
     }
 
-    loggedErrorY = atof(errorY);
-
-    // eventTrigger(&eventTrigger_jevoisErrorLog);
+    loggedErrorX = atoi(errorX);
+    loggedErrorY = atoi(errorY);
 }
 
 void jevoisTask(void *param)
@@ -61,7 +55,7 @@ void jevoisTask(void *param)
 
     while (true)
     {
-        jevoisError();
+        snakeGate();
     }
 }
 
@@ -94,6 +88,6 @@ DECK_DRIVER(jevoisDriver);
  * Logging variables for the jevois camera
  */
 LOG_GROUP_START(jevois)
-LOG_ADD(LOG_FLOAT, errorx, &loggedErrorX)
-LOG_ADD(LOG_FLOAT, errory, &loggedErrorY)
+LOG_ADD(LOG_INT32, errorx, &loggedErrorX)
+LOG_ADD(LOG_INT32, errory, &loggedErrorY)
 LOG_GROUP_STOP(jevois)
