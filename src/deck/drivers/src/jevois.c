@@ -18,30 +18,36 @@
 
 static bool isInit = false;
 
-int32_t loggedErrorX = 0;
-int32_t loggedErrorY = 0;
+int16_t loggedErrorX = 0;
+int16_t loggedErrorY = 0;
 
 void snakeGate()
 {
     char c = '0';
-    char errorX[MAX_MESSAGE_SIZE];
-    char errorY[MAX_MESSAGE_SIZE];
+    char errorX[MAX_MESSAGE_SIZE] = "";
+    char errorY[MAX_MESSAGE_SIZE] = "";
+
+    while (c != 'x') uart2Getchar(&c);
 
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
     {
         uart2Getchar(&c);
-
-        if (c == '-') break;
-        
+        if (c == 'y')
+        {
+            errorX[i] = '\0';
+            break;
+        }
         errorX[i] = c;
     }
 
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
     {
         uart2Getchar(&c);
-
-        if (c == '\n') break;
-        
+        if (c == 'e')
+        {
+            errorY[i] = '\0';
+            break;
+        }
         errorY[i] = c;
     }
 
@@ -88,6 +94,6 @@ DECK_DRIVER(jevoisDriver);
  * Logging variables for the jevois camera
  */
 LOG_GROUP_START(jevois)
-LOG_ADD(LOG_INT32, errorx, &loggedErrorX)
-LOG_ADD(LOG_INT32, errory, &loggedErrorY)
+LOG_ADD(LOG_INT16, errorx, &loggedErrorX)
+LOG_ADD(LOG_INT16, errory, &loggedErrorY)
 LOG_GROUP_STOP(jevois)
