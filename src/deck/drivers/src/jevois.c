@@ -24,8 +24,8 @@ int16_t loggedErrorY = 0;
 void snakeGate()
 {
     char c = '0';
-    char errorX[MAX_MESSAGE_SIZE] = "";
-    char errorY[MAX_MESSAGE_SIZE] = "";
+    char errorX[MAX_MESSAGE_SIZE];
+    char errorY[MAX_MESSAGE_SIZE];
 
     while (c != 'x') uart2Getchar(&c);
 
