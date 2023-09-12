@@ -35,7 +35,7 @@ int16_t loggedErrorY = 0;
 int16_t loggedWidth = 0;
 int16_t loggedHeight = 0;
 
-static uint8_t start_flight = false;
+uint8_t start_flight = false;
 
 static float current_yawrate = 0.0f;
 static float current_z_cmd = DEFAULT_HEIGHT;
@@ -167,6 +167,7 @@ void jevoisSendGateCommand(int errorX, int errorY){
 void jevoisTask(void *param)
 {
     systemWaitStart();
+    jevoisInitCommand();
 
     float errorX = 0.0f;
     float errorY = 0.0f; 
