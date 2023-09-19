@@ -1,18 +1,15 @@
 #define DEBUG_MODULE "JEVOIS"
 
-#include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "debug.h"
 #include "log.h"
-#include "param.h"
 #include "deck.h"
 #include "uart2.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "system.h"
-#include "eventtrigger.h"
 
 #define MAX_MESSAGE_SIZE 32 // max no of chars in the message
 
