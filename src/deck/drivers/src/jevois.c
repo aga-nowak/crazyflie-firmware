@@ -23,12 +23,12 @@ bool jevoisTimestamp()
 
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
     {
-        if (!uart2GetCharWithDefaultTimeout(&c)) break;
+        if (!uart2GetCharWithDefaultTimeout(&c)) return false;
 
         if (c == '\n')
         {
             buf[i] = '\0';
-            loggedTimestamp = atoll(buf);
+            loggedTimestamp = atol(buf);
             return true;
         }
 
