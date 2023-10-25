@@ -11,7 +11,7 @@
 #include "task.h"
 #include "system.h"
 
-#define MAX_MESSAGE_SIZE 16
+#define MAX_MESSAGE_SIZE 32
 
 static bool isInit = false;
 uint32_t loggedTimestamp = 0;
