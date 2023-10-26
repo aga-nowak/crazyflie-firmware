@@ -16,26 +16,25 @@
 static bool isInit = false;
 uint32_t loggedTimestamp = 0;
 
-bool jevoisTimestamp()
+void jevoisTimestamp()
 {
     char buf[MAX_MESSAGE_SIZE];
     char c = '0';
 
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
     {
-        if (!uart2GetCharWithDefaultTimeout(&c)) return false;
+        if (!uart2GetCharWithDefaultTimeout(&c)) break;
 
         if (c == '\n')
         {
             buf[i] = '\0';
             loggedTimestamp = atol(buf);
-            return true;
+            DEBUG_PRINT("%lu\n", loggedTimestamp);
+            break;
         }
 
         buf[i] = c;
     }
-
-    return false;
 }
 
 void jevoisTask(void *param)
@@ -44,7 +43,7 @@ void jevoisTask(void *param)
 
     while (true)
     {
-        if (jevoisTimestamp()) DEBUG_PRINT("%lu\n", loggedTimestamp);
+        jevoisTimestamp();
     }
 }
 
