@@ -13,10 +13,10 @@
 
 #define MAX_MESSAGE_SIZE 32
 
-static bool isInit = false;
+static uint8_t isInit = 0;
 uint32_t loggedTimestamp = 0;
 
-void jevoisTimestamp()
+void readSerial()
 {
     char buf[MAX_MESSAGE_SIZE];
     char c = '0';
@@ -28,8 +28,8 @@ void jevoisTimestamp()
         if (c == '\n')
         {
             buf[i] = '\0';
-            loggedTimestamp = atol(buf);
-            DEBUG_PRINT("%lu\n", loggedTimestamp);
+            if (buf[0] >= '0' && buf[0] <= '9') loggedTimestamp = atol(buf);
+            else DEBUG_PRINT("%s\n", buf);
             break;
         }
 
@@ -41,10 +41,7 @@ void jevoisTask(void *param)
 {
     systemWaitStart();
 
-    while (true)
-    {
-        jevoisTimestamp();
-    }
+    while (1) readSerial();
 }
 
 static void jevoisInit()
@@ -53,9 +50,10 @@ static void jevoisInit()
 
     uart2Init(115200);
 
-    xTaskCreate(jevoisTask, JEVOIS_TASK_NAME, JEVOIS_TASK_STACKSIZE, NULL, JEVOIS_TASK_PRI, NULL);
+    xTaskCreate(jevoisTask, JEVOIS_TASK_NAME, JEVOIS_TASK_STACKSIZE, NULL,
+                JEVOIS_TASK_PRI, NULL);
 
-    isInit = true;
+    isInit = 1;
 }
 
 static bool jevoisTest()
