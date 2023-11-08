@@ -16,17 +16,14 @@
 static uint8_t isInit = 0;
 uint32_t loggedTimestamp = 0;
 
-void readSerial()
-{
+void readSerial() {
     char buf[MAX_MESSAGE_SIZE];
     char c = '0';
 
-    for (int i = 0; i < MAX_MESSAGE_SIZE; i++)
-    {
+    for (int i = 0; i < MAX_MESSAGE_SIZE; i++) {
         if (!uart2GetCharWithDefaultTimeout(&c)) break;
 
-        if (c == '\n')
-        {
+        if (c == '\n') {
             buf[i] = '\0';
             if (buf[0] >= '0' && buf[0] <= '9') loggedTimestamp = atol(buf);
             else DEBUG_PRINT("%s\n", buf);
@@ -37,15 +34,13 @@ void readSerial()
     }
 }
 
-void jevoisTask(void *param)
-{
+void jevoisTask(void *param) {
     systemWaitStart();
 
     while (1) readSerial();
 }
 
-static void jevoisInit()
-{
+static void jevoisInit() {
     DEBUG_PRINT("Initialize driver\n");
 
     uart2Init(115200);
@@ -56,8 +51,7 @@ static void jevoisInit()
     isInit = 1;
 }
 
-static bool jevoisTest()
-{
+static bool jevoisTest() {
     return isInit;
 }
 
