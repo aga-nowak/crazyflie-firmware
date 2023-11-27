@@ -59,6 +59,7 @@ static const DeckDriver jevoisDriver = {
         .name = "jevois",
         .init = jevoisInit,
         .test = jevoisTest,
+        .usedPeriph = DECK_USING_UART2,
 };
 
 DECK_DRIVER(jevoisDriver);
