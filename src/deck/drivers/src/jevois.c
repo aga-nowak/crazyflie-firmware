@@ -18,19 +18,19 @@ uint32_t loggedTimestamp = 0;
 
 void readSerial() {
     char buf[MAX_MESSAGE_SIZE];
-    char c = '0';
+    uint8_t receivedChar;
     
     for (int i = 0; i < MAX_MESSAGE_SIZE; i++) {
-        if (!uart2GetCharWithDefaultTimeout(&c)) break;
+        if (!uart2GetCharWithDefaultTimeout(&receivedChar)) break;
         
-        if (c == '\n') {
+        if (receivedChar == '\n') {
             buf[i] = '\0';
             if (buf[0] >= '0' && buf[0] <= '9') loggedTimestamp = atol(buf);
             else DEBUG_PRINT("%s\n", buf);
             break;
         }
         
-        buf[i] = c;
+        buf[i] = receivedChar;
     }
 }
 
